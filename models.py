@@ -3,6 +3,8 @@ from extensions import db
 
 
 class User(db.Model):
+    __tablename__ = "ems_user"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
@@ -15,6 +17,8 @@ class User(db.Model):
 
 
 class Employee(db.Model):
+    __tablename__ = "ems_employee"
+
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.String(20), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)

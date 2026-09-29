@@ -1,38 +1,78 @@
 {% extends "base.html" %}
+{% block title %}Edit Employee • EmployFlow{% endblock %}
+{% block page_title %}Edit Employee{% endblock %}
 
 {% block content %}
-<div class="form-card">
-    <h1>Edit Employee</h1>
-    <form method="POST">
-        <label>Employee ID</label>
-        <input type="text" name="employee_id" value="{{ employee.employee_id }}" required>
+<div class="form-page-grid">
+    <section class="form-card-modern">
+        <div class="form-card-header">
+            <span class="section-kicker">UPDATE RECORD</span>
+            <h2>Edit {{ employee.name }}</h2>
+            <p>Update employee details and save the changes to your SQL database.</p>
+        </div>
 
-        <label>Name</label>
-        <input type="text" name="name" value="{{ employee.name }}" required>
+        <form method="POST" class="modern-form employee-form">
+            <div class="form-grid">
+                <div class="field-group">
+                    <label>Employee ID</label>
+                    <input type="text" name="employee_id" value="{{ employee.employee_id }}" required>
+                </div>
 
-        <label>Email</label>
-        <input type="email" name="email" value="{{ employee.email }}" required>
+                <div class="field-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" value="{{ employee.name }}" required>
+                </div>
 
-        <label>Phone</label>
-        <input type="text" name="phone" value="{{ employee.phone }}" required>
+                <div class="field-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" value="{{ employee.email }}" required>
+                </div>
 
-        <label>Department</label>
-        <select name="department" required>
-            {% for department in ["IT", "HR", "Finance", "Sales", "Operations"] %}
-            <option
-                value="{{ department }}"
-                {% if employee.department == department %}selected{% endif %}
-            >{{ department }}</option>
-            {% endfor %}
-        </select>
+                <div class="field-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone" inputmode="numeric" maxlength="15" value="{{ employee.phone }}" required>
+                </div>
 
-        <label>Designation</label>
-        <input type="text" name="designation" value="{{ employee.designation }}" required>
+                <div class="field-group">
+                    <label>Department</label>
+                    <select name="department" required>
+                        {% for department in ["IT", "HR", "Finance", "Sales", "Operations"] %}
+                        <option value="{{ department }}" {% if employee.department == department %}selected{% endif %}>
+                            {{ department }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <label>Salary</label>
-        <input type="number" step="0.01" name="salary" value="{{ employee.salary }}" required>
+                <div class="field-group">
+                    <label>Designation</label>
+                    <input type="text" name="designation" value="{{ employee.designation }}" required>
+                </div>
 
-        <button class="button form-button" type="submit">Update Employee</button>
-    </form>
+                <div class="field-group field-span">
+                    <label>Monthly Salary (₹)</label>
+                    <input type="number" min="0" step="0.01" name="salary" value="{{ employee.salary }}" required>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a class="ghost-btn" href="{{ url_for('employee.home') }}">Cancel</a>
+                <button class="primary-btn" type="submit">Update Employee <span>→</span></button>
+            </div>
+        </form>
+    </section>
+
+    <aside class="form-help-card edit-help">
+        <div class="employee-large-avatar">{{ employee.name[:1]|upper }}</div>
+        <h3>{{ employee.name }}</h3>
+        <p>{{ employee.designation }}</p>
+        <div class="mini-detail"><span>Employee ID</span><strong>{{ employee.employee_id }}</strong></div>
+        <div class="mini-detail"><span>Department</span><strong>{{ employee.department }}</strong></div>
+        <div class="mini-detail"><span>Current Salary</span><strong>₹{{ "{:,.0f}".format(employee.salary) }}</strong></div>
+        <div class="api-hint">
+            <small>REST API</small>
+            <code>PUT /api/employees/{{ employee.id }}</code>
+        </div>
+    </aside>
 </div>
 {% endblock %}

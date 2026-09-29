@@ -1,38 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login - Employee Management System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login • EmployFlow</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-<div class="login-wrapper">
-    <div class="login-card">
-        <h1>Admin Login</h1>
-        <p>Login to access the Employee Management System.</p>
+<body class="login-page">
+    <div class="login-shell">
+        <section class="login-visual">
+            <div class="visual-glow glow-one"></div>
+            <div class="visual-glow glow-two"></div>
+            <div class="login-brand">
+                <div class="brand-mark brand-mark-light">E</div>
+                <div>
+                    <strong>EmployFlow</strong>
+                    <span>Employee Management System</span>
+                </div>
+            </div>
 
-        {% if error %}
-        <div class="error-message">{{ error }}</div>
-        {% endif %}
+            <div class="visual-copy">
+                <span class="login-kicker">SMART WORKFORCE MANAGEMENT</span>
+                <h1>Simple employee management, beautifully organized.</h1>
+                <p>A compact college mini project powered by Flask API, SQLAlchemy and JWT authentication.</p>
 
-        <form method="POST">
-            <label>Username</label>
-            <input type="text" name="username" required>
+                <div class="feature-row">
+                    <div><b>✓</b><span>JWT Security<br><small>1-hour token expiry</small></span></div>
+                    <div><b>✓</b><span>REST API<br><small>Protected endpoints</small></span></div>
+                    <div><b>✓</b><span>SQL Data<br><small>Employee records</small></span></div>
+                </div>
+            </div>
 
-            <label>Password</label>
-            <input type="password" name="password" required>
+            <div class="visual-footer">Python • Flask • JavaScript • SQL</div>
+        </section>
 
-            <button class="button form-button" type="submit">Login</button>
-        </form>
+        <section class="login-form-side">
+            <div class="login-form-card">
+                <span class="form-kicker">WELCOME BACK</span>
+                <h2>Sign in to your dashboard</h2>
+                <p>Use your administrator credentials to continue.</p>
 
-        <div class="login-info">
-            <strong>Admin Access</strong><br>
-            Use the administrator credentials configured for this deployment.
-        </div>
+                {% if error %}
+                <div class="alert-error">⚠ {{ error }}</div>
+                {% endif %}
 
-        <p class="small-text">
-            JWT session expires automatically after 1 hour.
-        </p>
+                <form method="POST" class="modern-form login-form">
+                    <div class="field-group">
+                        <label for="username">Username</label>
+                        <div class="input-shell">
+                            <span>◉</span>
+                            <input id="username" type="text" name="username" placeholder="Enter username" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="password">Password</label>
+                        <div class="input-shell">
+                            <span>⌑</span>
+                            <input id="password" type="password" name="password" placeholder="Enter password" required>
+                            <button class="password-toggle" type="button" id="passwordToggle">Show</button>
+                        </div>
+                    </div>
+
+                    <button class="login-submit" type="submit">
+                        Sign in securely <span>→</span>
+                    </button>
+                </form>
+
+                <div class="security-note">
+                    <div class="shield">◆</div>
+                    <div>
+                        <strong>JWT Protected Session</strong>
+                        <span>Your authentication token expires automatically after 1 hour.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-</div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

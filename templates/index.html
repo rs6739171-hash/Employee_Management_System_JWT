@@ -1,68 +1,143 @@
 {% extends "base.html" %}
+{% block title %}Dashboard • EmployFlow{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="top-section">
+<section class="hero-strip">
     <div>
-        <h1>Employee Records</h1>
-        <p>Manage employee information using Flask, SQL and JWT Authentication.</p>
+        <span class="hero-kicker">WORKFORCE OVERVIEW</span>
+        <h2>Manage your team from one clean workspace.</h2>
+        <p>Search records, update employee details and monitor your workforce through a Flask-powered backend.</p>
     </div>
-    <a class="button" href="{{ url_for('employee.add_employee') }}">
-        + Add Employee
+    <a class="primary-btn" href="{{ url_for('employee.add_employee') }}">
+        <span>＋</span> Add Employee
     </a>
-</div>
+</section>
 
-<form class="search-form" method="GET">
-    <input
-        type="text"
-        name="search"
-        placeholder="Search by name, employee ID or department"
-        value="{{ search }}"
-    >
-    <button type="submit">Search</button>
-    <a class="clear-button" href="{{ url_for('employee.home') }}">Clear</a>
-</form>
+<section class="stats-grid">
+    <article class="stat-card">
+        <div class="stat-icon stat-icon-blue">👥</div>
+        <div>
+            <span>Total Employees</span>
+            <strong class="stat-number" data-value="{{ stats.total_employees }}">{{ stats.total_employees }}</strong>
+            <small>Registered workforce</small>
+        </div>
+    </article>
 
-<div class="card">
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Employee ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Department</th>
-            <th>Designation</th>
-            <th>Salary</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for employee in employees %}
-        <tr>
-            <td>{{ employee.id }}</td>
-            <td>{{ employee.employee_id }}</td>
-            <td>{{ employee.name }}</td>
-            <td>{{ employee.email }}</td>
-            <td>{{ employee.phone }}</td>
-            <td>{{ employee.department }}</td>
-            <td>{{ employee.designation }}</td>
-            <td>₹{{ "%.2f"|format(employee.salary) }}</td>
-            <td>
-                <a class="edit" href="{{ url_for('employee.edit_employee', id=employee.id) }}">Edit</a>
-                <a
-                    class="delete"
-                    href="{{ url_for('employee.delete_employee', id=employee.id) }}"
-                    onclick="return confirm('Delete this employee?')"
-                >Delete</a>
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="9" class="empty">No employee records found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-</div>
+    <article class="stat-card">
+        <div class="stat-icon stat-icon-violet">◫</div>
+        <div>
+            <span>Departments</span>
+            <strong class="stat-number" data-value="{{ stats.department_count }}">{{ stats.department_count }}</strong>
+            <small>Active departments</small>
+        </div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-icon stat-icon-green">₹</div>
+        <div>
+            <span>Average Salary</span>
+            <strong>₹{{ "{:,.0f}".format(stats.average_salary) }}</strong>
+            <small>Across all employees</small>
+        </div>
+    </article>
+
+    <article class="stat-card">
+        <div class="stat-icon stat-icon-orange">↗</div>
+        <div>
+            <span>Highest Salary</span>
+            <strong>₹{{ "{:,.0f}".format(stats.highest_salary) }}</strong>
+            <small>Current highest package</small>
+        </div>
+    </article>
+</section>
+
+<section class="panel-card">
+    <div class="panel-heading">
+        <div>
+            <span class="section-kicker">DIRECTORY</span>
+            <h3>Employee Records</h3>
+        </div>
+        <span class="record-count">{{ employees|length }} records shown</span>
+    </div>
+
+    <form class="toolbar" method="GET" id="searchForm">
+        <div class="search-box">
+            <span>⌕</span>
+            <input
+                id="employeeSearch"
+                type="text"
+                name="search"
+                placeholder="Search by name, ID, department or role..."
+                value="{{ search }}"
+                autocomplete="off"
+            >
+        </div>
+        <button class="secondary-btn" type="submit">Search</button>
+        {% if search %}
+        <a class="ghost-btn" href="{{ url_for('employee.home') }}">Clear</a>
+        {% endif %}
+    </form>
+
+    <div class="table-wrap">
+        <table class="employee-table" id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Employee ID</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Contact</th>
+                    <th>Salary</th>
+                    <th class="actions-head">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr data-search="{{ employee.name }} {{ employee.employee_id }} {{ employee.department }} {{ employee.designation }} {{ employee.email }}">
+                    <td>
+                        <div class="employee-cell">
+                            <div class="employee-avatar">{{ employee.name[:1]|upper }}</div>
+                            <div>
+                                <strong>{{ employee.name }}</strong>
+                                <span>{{ employee.email }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="id-pill">{{ employee.employee_id }}</span></td>
+                    <td><span class="dept-pill">{{ employee.department }}</span></td>
+                    <td>{{ employee.designation }}</td>
+                    <td>
+                        <div class="contact-cell">
+                            <span>{{ employee.phone }}</span>
+                            <small>{{ employee.email }}</small>
+                        </div>
+                    </td>
+                    <td><strong>₹{{ "{:,.0f}".format(employee.salary) }}</strong></td>
+                    <td class="table-actions">
+                        <a class="icon-btn edit-btn" title="Edit employee" href="{{ url_for('employee.edit_employee', id=employee.id) }}">✎</a>
+                        <a
+                            class="icon-btn delete-btn"
+                            title="Delete employee"
+                            href="{{ url_for('employee.delete_employee', id=employee.id) }}"
+                            data-delete-name="{{ employee.name }}"
+                        >⌫</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr class="empty-row">
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <div class="empty-icon">◎</div>
+                            <h4>No employees found</h4>
+                            <p>Add your first employee or try a different search.</p>
+                            <a class="primary-btn" href="{{ url_for('employee.add_employee') }}">Add Employee</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 {% endblock %}

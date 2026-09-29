@@ -1,0 +1,16 @@
+CREATE TABLE user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE employee (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id VARCHAR(20) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    phone VARCHAR(15) NOT NULL,
+    department VARCHAR(50) NOT NULL,
+    designation VARCHAR(50) NOT NULL,
+    salary FLOAT NOT NULL
+);

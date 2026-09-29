@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Employee Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="login-wrapper">
+    <div class="login-card">
+        <h1>Admin Login</h1>
+        <p>Login to access the Employee Management System.</p>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <label>Username</label>
+            <input type="text" name="username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button class="button form-button" type="submit">Login</button>
+        </form>
+
+        <div class="login-info">
+            <strong>Admin Access</strong><br>
+            Use the administrator credentials configured for this deployment.
+        </div>
+
+        <p class="small-text">
+            JWT session expires automatically after 1 hour.
+        </p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify
 from flask_jwt_extended import jwt_required
+from sqlalchemy import func
 
 from extensions import db
 from models import Employee
@@ -12,19 +13,37 @@ employee_bp = Blueprint("employee", __name__)
 def home():
     search = request.args.get("search", "").strip()
 
+    query = Employee.query
+
     if search:
-        employees = Employee.query.filter(
+        query = query.filter(
             (Employee.name.contains(search))
             | (Employee.employee_id.contains(search))
             | (Employee.department.contains(search))
-        ).all()
-    else:
-        employees = Employee.query.order_by(Employee.id.desc()).all()
+            | (Employee.designation.contains(search))
+        )
+
+    employees = query.order_by(Employee.id.desc()).all()
+
+    total_employees = Employee.query.count()
+    department_count = db.session.query(
+        func.count(func.distinct(Employee.department))
+    ).scalar() or 0
+    average_salary = db.session.query(func.avg(Employee.salary)).scalar() or 0
+    highest_salary = db.session.query(func.max(Employee.salary)).scalar() or 0
+
+    stats = {
+        "total_employees": total_employees,
+        "department_count": department_count,
+        "average_salary": average_salary,
+        "highest_salary": highest_salary,
+    }
 
     return render_template(
         "index.html",
         employees=employees,
         search=search,
+        stats=stats,
     )
 
 
@@ -118,11 +137,7 @@ def api_add_employee():
         "salary",
     ]
 
-    missing_fields = [
-        field
-        for field in required_fields
-        if not data.get(field)
-    ]
+    missing_fields = [field for field in required_fields if not data.get(field)]
 
     if missing_fields:
         return jsonify({

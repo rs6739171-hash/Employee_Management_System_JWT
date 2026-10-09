@@ -1,3 +1,15 @@
+<p align="center">
+  <img src="assets/project-banner.svg" alt="Employee Management System — Employee CRUD with a protected REST API" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://my-portfolio-website-topaz-beta.vercel.app/"><strong>Portfolio & demo access</strong></a>
+  &nbsp; · &nbsp;
+  <a href="https://github.com/rs6739171-hash"><strong>More projects by Rishabh</strong></a>
+</p>
+
+---
+
 # Employee Management System with JWT Authentication
 
 A simple college mini project / 15-day internship project using Python, Flask, SQLAlchemy and JWT authentication.
